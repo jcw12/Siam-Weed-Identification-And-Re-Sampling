@@ -32,7 +32,7 @@ outputFolder = r"C:\Users\user\Documents\GitHub\Siam-Weed-Identification-And-Re-
 Downsampling = True
 #Options for method include INTER_CUBIC, INTER_LANCZOS4, INTER_LINEAR
 Method = cv2.INTER_LANCZOS4
-Factor = 2
+Factor = 8
 
 #Tile Sizes:
 tile_size = (456, 456)

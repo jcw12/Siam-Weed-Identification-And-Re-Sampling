@@ -23,12 +23,13 @@ Created on Wed Oct 20 11:20:53 2021
 import cv2
 import math
 import os
+import numpy as np
 
 inputFolder = r"C:\Users\user\Documents\GitHub\Siam-Weed-Identification-And-Re-Sampling\Siam Weed Git\UnSliced"
-outputFolder = r"C:\Users\user\Documents\GitHub\Siam-Weed-Identification-And-Re-Sampling\Siam Weed Git\Regular"
+outputFolder = r"C:\Users\user\Documents\GitHub\Siam-Weed-Identification-And-Re-Sampling\Siam Weed Git\Aggregated"
 
 #Set downsampling method and downsampling factor here:
-Downsampling = False
+Downsampling = True
 #Options for method include INTER_CUBIC, INTER_LANCZOS4, INTER_LINEAR
 Method = cv2.INTER_LANCZOS4
 Factor = 2
@@ -66,8 +67,9 @@ def load_images_from_folder(folder):
                 print(os.path.join(path, name),path,name)
                 if Downsampling == True:
                     downsample(os.path.join(path, name))
-                else:
-                    sliceEmAll(os.path.join(path, name), img)
+                #else:
+                    #sliceEmAll(os.path.join(path, name), img)
+                #sliceEmAll(os.path.join(path, name), img)
                     
                     
                 
@@ -75,7 +77,31 @@ def load_images_from_folder(folder):
                 #
     return inputImages
 
+def downsample(img):
+    #average proportional to the area of the input etc.
+    # Define aggregation factor
+    data = cv2.imread(img)
+    aggregation_factor = Factor
 
+    # Compute the padding required
+    padding_rows = data.shape[0] % aggregation_factor
+    padding_cols = data.shape[1] % aggregation_factor
+
+    # Pad the array with zeros
+    padded_data = np.pad(data, ((0, padding_rows), (0, padding_cols), (0, 0)), mode='constant')
+
+    # Reshape the padded ndarray
+    reshaped_data = padded_data.reshape(padded_data.shape[0] // aggregation_factor, aggregation_factor,
+                                    padded_data.shape[1] // aggregation_factor, aggregation_factor, data.shape[2])
+
+    # Compute the mean along the specified axes
+    aggregated_data = np.mean(reshaped_data, axis=(1, 3))
+    print(reshaped_data.shape)
+    
+    sliceEmAll(img, aggregated_data)
+
+
+"""
 def downsample(image):
     #https://www.tutorialkart.com/opencv/python/opencv-python-resize-image/
     #https://docs.opencv.org/2.4/modules/imgproc/doc/geometric_transformations.html#resize
@@ -85,9 +111,10 @@ def downsample(image):
     shape = (width, height)
     img = cv2.resize(img, shape, interpolation = Method)
     sliceEmAll(image, img)
-    
-    
 
+
+    
+"""
     
     
     

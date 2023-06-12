@@ -32,7 +32,7 @@ outputFolder = r"C:\Users\user\Documents\GitHub\Siam-Weed-Identification-And-Re-
 Downsampling = True
 #Options for method include INTER_CUBIC, INTER_LANCZOS4, INTER_LINEAR
 Method = cv2.INTER_LANCZOS4
-Factor = 8
+Factor = 2
 
 #Tile Sizes:
 tile_size = (456, 456)
@@ -82,6 +82,7 @@ def downsample(img):
     # Define aggregation factor
     data = cv2.imread(img)
     aggregation_factor = Factor
+    print(data[0:8,0:8,1])
 
     # Compute the padding required
     padding_rows = data.shape[0] % aggregation_factor
@@ -89,6 +90,7 @@ def downsample(img):
 
     # Pad the array with zeros
     padded_data = np.pad(data, ((0, padding_rows), (0, padding_cols), (0, 0)), mode='constant')
+    print(padded_data.shape)
 
     # Reshape the padded ndarray
     reshaped_data = padded_data.reshape(padded_data.shape[0] // aggregation_factor, aggregation_factor,
@@ -96,9 +98,11 @@ def downsample(img):
 
     # Compute the mean along the specified axes
     aggregated_data = np.mean(reshaped_data, axis=(1, 3))
-    print(reshaped_data.shape)
+    print(aggregated_data[0,0],aggregated_data[0,1])
+    print("""aggregated:
+""",aggregated_data[0:8,0:8,1])
     
-    sliceEmAll(img, aggregated_data)
+    #sliceEmAll(img, aggregated_data)
 
 
 """

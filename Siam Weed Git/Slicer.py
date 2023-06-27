@@ -36,9 +36,9 @@ Need to make it all one function, where the downsampling method can be chosen an
 with a factor of 1 as an option. Also need to adjust the ends so that the moving window doesn't clip the ends.'
 """
 
-#Options for method include cv2.INTER_CUBIC, cv2.INTER_LANCZOS4, cv2.INTER_LINEAR, PIXEL_AGG. PIXEL_AGG is the recommended method for most realistic upscaled images.
-Method = cv2.INTER_LANCZOS4
-Factor = 8
+#Options for method include cv2.INTER_CUBIC, cv2.INTER_LANCZOS4, cv2.INTER_LINEAR, 'PIXEL_AGG'. PIXEL_AGG is the recommended method for most realistic upscaled images.
+Method = 'PIXEL_AGG'
+Factor = 5
 
 #Tile Sizes:
 tile_size = (456, 456)
@@ -49,24 +49,31 @@ def sliceEmAll(imageName, img):
     img_shape = img.shape
     print(img_shape)
     offset_fit_0 = img_shape[0] % offset[0]
+    print('offset fit 0:',offset_fit_0)
+    
     offset_fit_1 = img_shape[1] % offset[1]
+    print('offset fit 1:',offset_fit_1)
     #This function slices an image into m*n tiles. The code is adopted from https://stackoverflow.com/questions/45950124/creating-image-tiles-mn-of-original-image-using-python-and-numpy
     for i in range(int(math.ceil(img_shape[0]/(offset[1] * 1.0)))):
-        if offset_fit_0 != 0 and i == math.ceil(img_shape[0]/(offset[1] * 1.0)):
-            window_top = offset[1]*i-offset_fit_0
+        if offset_fit_0 != 0 and i == math.ceil(img_shape[0]/(offset[1] * 1.0))-1:
+        
+            window_top = offset[1]*i-(tile_size[0]-offset_fit_0)
+            print('window_top:',window_top)
+            window_height = min(offset[1]*i+tile_size[1], img_shape[0])
+            print('here')
+        else:
+            window_top = offset[1]*i
+            print('window_top:',window_top)
+            window_height = min(offset[1]*i+tile_size[1], img_shape[0])
         for j in range(int(math.ceil(img_shape[1]/(offset[0] * 1.0)))):
             print(offset*j)
             print(math.ceil(img_shape[1]/(offset[1] * 1.0)))
             #If offsets need to be made and it's the last window
             if offset_fit_1 != 0 and j == math.ceil(img_shape[1]/(offset[0] * 1.0))-1:
                 print('Adjust this!', i,j)
-                window_top = offset[1]*i
-                window_height = min(offset[1]*i+tile_size[1], img_shape[0])
-                window_start = offset[0]*j - offset_fit_1
+                window_start = offset[0]*j (tile_size[1]-offset_fit_1)
                 window_length = min(offset[0]*j+tile_size[0], img_shape[1])
             else:
-                window_top = offset[1]*i
-                window_height = min(offset[1]*i+tile_size[1], img_shape[0])
                 window_start = offset[0]*j
                 window_length = min(offset[0]*j+tile_size[0], img_shape[1])
             cropped_img = img[window_top:window_height, window_start:window_length]
@@ -76,6 +83,7 @@ def sliceEmAll(imageName, img):
             outputImagePath = imageName.replace(inputFolder+"\\",outputFolder+"\\").replace(".JPG","_"+str(i+1) + "_" + str(j+1) + ".png")
             #outputImagePath = imageName.replace("\\","_").replace(inputFolder+"\\",outputFolder+"\\").replace(".JPG","_"+str(i+1) + "_" + str(j+1) + ".png")
             print(outputImagePath)
+            print('FINAL')
             cv2.imwrite(outputImagePath, cropped_img)
     return 0
 
@@ -106,10 +114,8 @@ def downsample(img):
     #average proportional to the area of the input etc.
     # Define aggregation factor
     data = cv2.imread(img)
-    
-    print(data.shape)
+    print('downsample data shape', data.shape)
     aggregation_factor = Factor
-    print(data[0:8,0:8,1])
     if Method == 'PIXEL_AGG' and Downsampling == True:
         print('Downsampling using', Method, 'and a scale factor of',Factor)
         # Compute the padding required
@@ -118,7 +124,7 @@ def downsample(img):
         
         # Pad the array with zeros
         padded_data = np.pad(data, ((0, padding_rows), (0, padding_cols), (0, 0)), mode='constant')
-        print(padded_data.shape)
+        print('padded:',padded_data.shape)
         
         # Reshape the padded ndarray
         reshaped_data = padded_data.reshape(padded_data.shape[0] // aggregation_factor, aggregation_factor,

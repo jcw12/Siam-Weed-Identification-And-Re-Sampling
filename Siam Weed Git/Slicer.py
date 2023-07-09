@@ -52,6 +52,10 @@ If optional parameters aren't specifed:
     [Downsampling_method, Factor]: No downsampling
     #
 """
+
+"""
+Change this to have Downsampling as T or F and then method/factor as optional?
+"""
 def Slicer(inputFolder, outputFolder, tile_size=(456,456), offset=None, offset_shift = True, Downsampling = [0,1]):
     if offset == None:
         offset = tile_size
@@ -60,6 +64,8 @@ def Slicer(inputFolder, outputFolder, tile_size=(456,456), offset=None, offset_s
     Factor = Downsampling[1]
     
     #Load the images from input folder
+    print("""
+--- Loading Image ---""")
     inputImages = []
     for path, subdirs, files in os.walk(inputFolder):
         for name in files:
@@ -70,7 +76,8 @@ def Slicer(inputFolder, outputFolder, tile_size=(456,456), offset=None, offset_s
                 
                 #Check if downsampling is required and downsample if necessary
                 if Method != 0 and Factor != 1:
-                    print ("""...""")
+                    print ("""
+--- Downsampling Image ---""")
                     img = os.path.join(path, name)
                     data = cv2.imread(img)
                     aggregation_factor = Factor
@@ -105,8 +112,9 @@ def Slicer(inputFolder, outputFolder, tile_size=(456,456), offset=None, offset_s
                 
                 
                 #Slice the image
-                print ("""...""")
-                print('Slicing Now')
+                print ("""
+--- Slicing Image ---""")
+                print('Slicing Now with Tile Size:', tile_size, 'and Window Offset:', offset)
                 imageName = os.path.join(path, name)
                 img_shape = img.shape
                 
@@ -115,9 +123,9 @@ def Slicer(inputFolder, outputFolder, tile_size=(456,456), offset=None, offset_s
                     offset_fit_0 = img_shape[0] % offset[0]
                     offset_fit_1 = img_shape[1] % offset[1]
                     if offset_fit_0 != 0 or offset_fit_1 != 0:
-                        print('offset shift:',offset_fit_0, offset_fit_1, 'Final Tile Position will be adjusted to maintain tile size.')
+                        print('offset shift:',offset_fit_0, offset_fit_1, 'Final Tile(s) Position will be adjusted to maintain tile size.')
                     else:
-                        print('offset shift:',offset_fit_0, offset_fit_1, 'Final Tile Position not adjusted.')
+                        print('offset shift:',offset_fit_0, offset_fit_1, 'Final Tile(s) Position not adjusted.')
                 else:
                     offset_fit_0 = 0
                     offset_fit_1 = 0

@@ -12,24 +12,11 @@ Created on Wed Oct 20 11:20:53 2021
 @author: dgautam
 """
 
-# import image_slicer
-
-
-
-# image_slicer.slice('DJI_0247.JPG', 96)
-
-# function inputs = image, desired size, desired numbersx desired numbery
 
 import cv2
 import math
 import os
 import numpy as np
-
-#inputFolder = r"C:\Users\user\Documents\GitHub\Siam-Weed-Identification-And-Re-Sampling\Siam Weed Git\UnSliced"
-#outputFolder = r"C:\Users\user\Documents\GitHub\Siam-Weed-Identification-And-Re-Sampling\Siam Weed Git\Test"
-
-#Set downsampling method and downsampling factor here:
-Downsampling = True
 
 """
 Need to make it all one function, where the downsampling method can be chosen and the factor can be chosen,
@@ -95,8 +82,13 @@ def Slicer (imageName, outputFolder, tile_size=(456,456), offset=None, offset_sh
             # Debugging the tiles
             #print(img)
             print(imageName)
-            print('Writing output image:', imageName.replace(".JPG","_"+str(i+1) + "_" + str(j+1) + ".png"))
-            outputImagePath = imageName.replace(os.path.dirname(imageName)+"\\",outputFolder+"\\").replace(".JPG","_"+str(i+1) + "_" + str(j+1) + ".png")
+            if type(imageName) == str:
+                print('Writing output image:', imageName.replace(".JPG","_"+str(i+1) + "_" + str(j+1) + ".png"))
+                outputImagePath = imageName.replace(os.path.dirname(imageName)+"\\",outputFolder+"\\").replace(".JPG","_"+str(i+1) + "_" + str(j+1) + ".png")
+            else:
+                print('Writing output image:', imageName.replace(".JPG","_"+str(i+1) + "_" + str(j+1) + ".png"))
+                
+           
             #outputImagePath = imageName.replace("\\","_").replace(inputFolder+"\\",outputFolder+"\\").replace(".JPG","_"+str(i+1) + "_" + str(j+1) + ".png")
             cv2.imwrite(outputImagePath, cropped_img)
     print('Slicer Complete')
@@ -161,21 +153,7 @@ def downsample(img, Downsampling_method, Factor, outputFile = None):
     else:
         return data
     print('Downsampling Complete')
-    
-    
-    
-    
-def Slice_Them_All(inputFolder, outputFolder, tile_size=(456,456), offset=None, offset_shift = True, Downsampling = [0,1]):
-    inputImages = load_images_from_folder(inputFolder)
-    #Split the downsampling argument into the Method and Factor components
-    Method = Downsampling[0]
-    Factor = Downsampling[1]
-    
-    for image in inputImages:
-        if Method != 0 and Factor != 1:
-            downsampled = downsample(image, Method, Factor)
-            Slicer(downsampled, outputFolder, tile_size, offset, offset_shift)
-    print('All folder images sliced')
+
 print('Script complete, functions loaded')
  
 # downsampling

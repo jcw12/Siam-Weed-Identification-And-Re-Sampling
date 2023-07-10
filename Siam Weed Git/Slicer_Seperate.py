@@ -115,7 +115,7 @@ def downsample(img, Downsampling_method, Factor, outputFile = None):
 --- Downsampling Image ---""")
     print('downsample data shape', data.shape)
     aggregation_factor = Factor
-    if Method == 'PIXEL_AGG' and Downsampling == True:
+    if Method == 'PIXEL_AGG':
         print('Downsampling using', Method, 'and a scale factor of',Factor)
         # Compute the padding required
         padding_rows = data.shape[0] % aggregation_factor
@@ -136,7 +136,7 @@ def downsample(img, Downsampling_method, Factor, outputFile = None):
         data = np.mean(reshaped_data, axis=(1, 3))
         print('New Shape:', data.shape)
         print('Clipping to make downsampling factor fit:',padding_rows,padding_cols)
-    elif Downsampling == True:
+    else:
         print('Downsampling using', Method, 'and a scale factor of',Factor)
         #https://www.tutorialkart.com/opencv/python/opencv-python-resize-image/
         #https://docs.opencv.org/2.4/modules/imgproc/doc/geometric_transformations.html#resize
@@ -145,8 +145,6 @@ def downsample(img, Downsampling_method, Factor, outputFile = None):
         shape = (width, height)
         data = cv2.resize(data, shape, interpolation = Method)
         
-    else:
-        print('Not Downsampling.')
     if outputFile != None:
         print('Outputting downsampled image to', outputFile)
         cv2.imwrite(outputFile, data)

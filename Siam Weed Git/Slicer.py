@@ -136,4 +136,24 @@ print('Slicer scipt run and functions loaded')
 
 #Slicer(r'C:\Users\user\Documents\GitHub\Siam-Weed-Identification-And-Re-Sampling\Siam Weed Git\UnSliced',r'C:\Users\user\Documents\GitHub\Siam-Weed-Identification-And-Re-Sampling\Siam Weed Git\Test')
 
+"""
+THIS is the script used to produce the sample datasets.
+"""
+
+#methods = [cv2.INTER_CUBIC,cv2.INTER_LANCZOS4,cv2.INTER_LINEAR,'PIXEL_AGG']
+#methodsstr = ['INTER_CUBIC', 'LANZCOS4', 'INTER_LINEAR', 'PIXEL_AGG']
+#inn = r'C:\Users\user\Documents\GitHub\Siam-Weed-Identification-And-Re-Sampling\Siam Weed Git\UnSliced'
+
+#for i in range(2,6):
+#    x=0
+#    for m in methods:
+#        
+#    
+#        fname = methodsstr[x]
+#        out = r'C:\Users\user\Documents\GitHub\Siam-Weed-Identification-And-Re-Sampling\Siam Weed Git\Factor of '+str(i)+'/'+fname
+#        print(out)
+#        
+#        Slicer(inn,out, Downsampling = [m,i])
+#        x = x + 1
     
+
